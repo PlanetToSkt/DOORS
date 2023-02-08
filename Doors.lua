@@ -86,8 +86,8 @@ local function findpath(destination)
 	local PathfindingService = game:GetService("PathfindingService")
 
 	local pathParams = {
-		["AgentHeight"] = 3,
-		["AgentRadius"] = 2,
+		["AgentHeight"] = 1,
+		["AgentRadius"] = 1,
 		["AgentCanJump"] = false
 	}
 
@@ -103,32 +103,35 @@ task.wait(1)
 
 local function walkto(destination)
 	local walktoPart = Instance.new("Part",workspace)
-	walktoPart.Size = Vector3.new(1,1,1)
+	walktoPart.Size = Vector3.new(5,1,1)
 	walktoPart.Position = destination.Position - Vector3.new(0,destination.Size.Y / 2,0)
 	walktoPart.Anchored = true
 	walktoPart.CanCollide = false
+    walktoPart.Color3 = Color3.fromRGB(0,255,0)
+    walktoPart.Transparency = 0.7
 
 	local Path = findpath(walktoPart)
 	print(Path)
 	if Path.Status == Enum.PathStatus.Success then
 		print("Success")
 		for index, waypoint in pairs(Path:GetWaypoints()) do
-			local part = Instance.new("Part",workspace)
+			--[[local part = Instance.new("Part",workspace)
 			part.Size = Vector3.new(1,1,1)
 			part.CanCollide = false
 			part.Anchored = true
             part.Transparency = 1
 			part.Position = waypoint.Position
+            --]]
 			Humanoid:MoveTo(waypoint.Position)
 			Humanoid.MoveToFinished:Wait()
 		end
         if destination.Name == "RoomExit" then
             spawnText("Door["..currentroom.."] finished walk. Walking to...[" .. currentroom + 1 .. "].")
             currentroom = currentroom + 1
+        elseif destination.Name == "Door" then
+            
         end
 		walktoPart:Destroy()
-		Humanoid:MoveTo(destination.Position - (destination.CFrame.LookVector * 10))
-		Humanoid.MoveToFinished:Wait()
 	else
 		spawnText("Path finding not successful. Please contact me with media.",true)
 		Humanoid:MoveTo(destination.Position - (character.HumanoidRootPart.CFrame.LookVector * 10))
@@ -161,11 +164,21 @@ local function hidenow()
         print(closet.Position, true)
     end
     highlightcloset.Parent = closet.Parent
+    Humanoid:MoveTo(HumanoidRootPart.Position)
+    local Part = Instance.new("Part",workspace)
+    Part.Anchored = true
+    Part.CanCollide = false
+    Part.Transparency = 1
+    Part.Size = Vector3.new(1,1,1)
+    Part.Position = closet.Parent.Base.Position
     walkto(closet)
+    character:SetPrimaryPartCFrame(Part.CFrame)
+    --[[
     local proximity = closet.Parent.HidePrompt
-    proximity.RequiresLineOfSight = false 
+    proximity.RequiresLineOfSight = false
     proximity.Style = Enum.ProximityPromptStyle.Default
     fireproximityprompt(proximity, 1, true)
+    --]]
 end
 
 local function unhide()
@@ -197,6 +210,11 @@ local function gotodoor()
             room = rooms:WaitForChild(currentroom)
             door = room.Door
             highlight.Parent = door
+            for i,v in pairs(room:GetChildren()) do
+                if v.Name == "Rooms_Desk" then
+                    v:Destroy()
+                end
+            end
             walkto(room.RoomExit)
         end
     end

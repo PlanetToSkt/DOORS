@@ -1,3 +1,7 @@
+if game.PlaceId == 6516141723 then
+    error("Do not execute this thing in doors lobby.")
+end
+
 local mainGui = Instance.new("ScreenGui")
 local mainframe = Instance.new("ScrollingFrame", mainGui)
 local uilistlayout = Instance.new("UIListLayout", mainframe)

@@ -4,6 +4,7 @@ end
 
 local mainGui = Instance.new("ScreenGui")
 local mainframe = Instance.new("ScrollingFrame", mainGui)
+local TextBox = Instance.new("TextBox",mainGui)
 local uilistlayout = Instance.new("UIListLayout", mainframe)
 local TextLabel = Instance.new("TextLabel")
 local UIS = game:GetService("UserInputService")
@@ -19,7 +20,9 @@ local processing = false
 local walkingtodoor = false
 local started = false
 local hide = false
-local currentroom = 0 --manual type the number on the room if you started this script middle of nowhere (typing wrong number crashes the whole script)
+local currentroom = 0
+local comfirmedroom = false
+local comfirmingroom = false
 
 mainGui.IgnoreGuiInset = true
 
@@ -50,6 +53,21 @@ ConsoleText.Position = UDim2.new(0, 0,0.115, 0)
 ConsoleText.Size = UDim2.new(0.174, 0,0.047, 0) 
 ConsoleText.Text = "Console" 
 ConsoleText.Parent = mainGui
+
+TextBox.BackgroundColor3 = Color3.fromRGB(255, 166, 103)
+TextBox.BorderColor3 = Color3.fromRGB(255,227,187)
+TextBox.BorderSizePixel = 5
+TextBox.Size = UDim2.new(0.093, 0,0.048, 0)
+TextBox.Position = UDim2.new(0.453, 0,0.475, 0)
+TextBox.Text = ""
+TextBox.TextColor3 = Color3.fromRGB(255,255,255)
+TextBox.FontFace = Font.fromEnum(Enum.Font.Nunito)
+TextBox.FontFace.Bold = true
+TextBox.TextScaled = true
+TextBox.PlaceholderText = "Enter the current room you are in."
+TextBox.PlaceholderColor3 = Color3.fromRGB(255,255,255)
+TextBox.Visible = false
+TextBox.TextEditable = false
 
 local function spawnText(text, R,G,B)
     local copytextlabel = TextLabel:Clone()
@@ -237,9 +255,11 @@ end
 
 --Starting tips (feel free to configure if you don't forget the starting keys.)
 
-spawnText("Please make sure this is in Rooms of doors else this script will break your career.")
-spawnText("Press Shift + Y to begin AI passing, else press Shift + Y again.")
-print("A")
+spawnText("Please enter your current room number! If you don't know how to, look at the door number and - 1.")
+TextBox.Visible = true
+TextBox.TextEditable = true
+spawnText("Enter at the textbox. Press Y after you are done.")
+--spawnText("Press Shift + Y to begin AI passing, else press Shift + Y again.")
 
 --DO NOT TOUCH AI STUFF
 
@@ -260,7 +280,7 @@ end)
 
 UIS.InputBegan:Connect(function(input, gameProcessedEvent)
     if not gameProcessedEvent then
-        if UIS:IsKeyDown(Enum.KeyCode.Y) and UIS:IsKeyDown(Enum.KeyCode.LeftShift) then
+        if UIS:IsKeyDown(Enum.KeyCode.Y) and UIS:IsKeyDown(Enum.KeyCode.LeftShift) and comfirmedroom then
             if not processing then
                 spawnText("AI passing begin. Please wait while configuring.")
                 processing = true
@@ -281,6 +301,31 @@ UIS.InputBegan:Connect(function(input, gameProcessedEvent)
                 spawnText("AI passing paused.")
                 processing = false
                 started = false
+            end
+        elseif UIS:IsKeyDown(Enum.KeyCode.Y) then
+            if not comfirmedroom and comfirmingroom then
+                spawnText("Success! AI can be triggered once you press Shift + Y. Do not move with your keys during process!",0,true)
+                comfirmedroom = true
+                comfirmingroom = false
+                TextBox.Visible = false
+                TextBox.Text = ""
+            elseif not comfirmedroom then
+                TextBox.TextEditable = false
+                local textEntered = tonumber(TextBox.Text)
+                if not textEntered == "" and rooms:FindFirstChild(textEntered) then
+                    spawnText("Are you sure ["..textEntered.."] is the room you are willing to start? Press Y if yes, N if not.",0,true)
+                    comfirmingroom = true
+                    currentroom = textEntered
+                end
+            end
+        elseif UIS:IsKeyDown(Enum.KeyCode.N) then
+            if not comfirmedroom and comfirmingroom then
+                spawnText("Room number declined. Enter the number again in the textbox.",true)
+                comfirmingroom = false
+                comfirmedroom = false
+                TextBox.TextEditable = true
+                TextBox.Text = ""
+                TextBox.Visible = true
             end
         end
     end

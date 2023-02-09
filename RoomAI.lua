@@ -22,7 +22,7 @@ local started = false
 local hide = false
 local currentroom = 0
 local comfirmedroom = false
-local comfirmingroom = false
+local comfirmingroom = true
 
 mainGui.IgnoreGuiInset = true
 
@@ -281,6 +281,32 @@ end)
 
 UIS.InputBegan:Connect(function(input, gameProcessedEvent)
     if not gameProcessedEvent then
+        if input.KeyCode == Enum.KeyCode.Y then
+            if comfirmedroom and comfirmingroom then
+                spawnText("Success! AI can be triggered once you press Shift + Y. Do not move with your keys during process!",0,true)
+                comfirmedroom = true
+                comfirmingroom = false
+                TextBox.Visible = false
+                TextBox.Text = ""
+            elseif not comfirmedroom then
+                TextBox.TextEditable = false
+                local textEntered = tonumber(TextBox.Text)
+                if not textEntered == "" and rooms:FindFirstChild(textEntered) then
+                    spawnText("Are you sure ["..textEntered.."] is the room you are willing to start? Press Y if yes, N if not.",0,true)
+                    comfirmingroom = true
+                    currentroom = textEntered
+                end
+            end
+        elseif input.KeyCode == Enum.KeyCode.N then
+            if not comfirmedroom and comfirmingroom then
+                spawnText("Room number declined. Enter the number again in the textbox.",true)
+                comfirmingroom = false
+                comfirmedroom = false
+                TextBox.TextEditable = true
+                TextBox.Text = ""
+                TextBox.Visible = true
+            end
+        end
         if UIS:IsKeyDown(Enum.KeyCode.Y) and UIS:IsKeyDown(Enum.KeyCode.LeftShift) and comfirmedroom then
             if not processing then
                 spawnText("AI passing begin. Please wait while configuring.")
@@ -302,31 +328,6 @@ UIS.InputBegan:Connect(function(input, gameProcessedEvent)
                 spawnText("AI passing paused.")
                 processing = false
                 started = false
-            end
-        elseif UIS:IsKeyDown(Enum.KeyCode.Y) then
-            if not comfirmedroom and comfirmingroom then
-                spawnText("Success! AI can be triggered once you press Shift + Y. Do not move with your keys during process!",0,true)
-                comfirmedroom = true
-                comfirmingroom = false
-                TextBox.Visible = false
-                TextBox.Text = ""
-            elseif not comfirmedroom then
-                TextBox.TextEditable = false
-                local textEntered = tonumber(TextBox.Text)
-                if not textEntered == "" and rooms:FindFirstChild(textEntered) then
-                    spawnText("Are you sure ["..textEntered.."] is the room you are willing to start? Press Y if yes, N if not.",0,true)
-                    comfirmingroom = true
-                    currentroom = textEntered
-                end
-            end
-        elseif UIS:IsKeyDown(Enum.KeyCode.N) then
-            if not comfirmedroom and comfirmingroom then
-                spawnText("Room number declined. Enter the number again in the textbox.",true)
-                comfirmingroom = false
-                comfirmedroom = false
-                TextBox.TextEditable = true
-                TextBox.Text = ""
-                TextBox.Visible = true
             end
         end
     end

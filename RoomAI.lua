@@ -57,7 +57,7 @@ ConsoleText.Parent = mainGui
 TextBox.BackgroundColor3 = Color3.fromRGB(255, 166, 103)
 TextBox.BorderColor3 = Color3.fromRGB(255,227,187)
 TextBox.BorderSizePixel = 5
-TextBox.AnchorPoint = UDim.new(0.5,0.5)
+TextBox.AnchorPoint = Vector2.new(0.5,0.5)
 TextBox.Size = UDim2.new(0.093, 0,0.048, 0)
 TextBox.Position = UDim2.new(0.5, 0,0.5, 0)
 TextBox.Text = ""
@@ -122,7 +122,6 @@ local function findpath(destination)
 	
 	return path
 end
-task.wait(1)
 
 local function walkto(destination)
 	local walktoPart = Instance.new("Part",workspace)

@@ -22,7 +22,7 @@ local started = false
 local hide = false
 local currentroom = 0
 local comfirmedroom = false
-local comfirmingroom = true
+local comfirmingroom = false
 
 mainGui.IgnoreGuiInset = true
 
@@ -70,6 +70,7 @@ TextBox.PlaceholderText = "Enter the current room you are in."
 TextBox.PlaceholderColor3 = Color3.fromRGB(255,255,255)
 TextBox.Visible = false
 TextBox.TextEditable = false
+TextBox.ClearTextOnFocus = false
 
 local function spawnText(text, R,G,B)
     local copytextlabel = TextLabel:Clone()
@@ -126,17 +127,14 @@ end
 
 local function walkto(destination)
 	local walktoPart = Instance.new("Part",workspace)
-	walktoPart.Size = Vector3.new(5,1,1)
+	walktoPart.Size = Vector3.new(5,1,3)
 	walktoPart.Position = destination.Position - Vector3.new(0,destination.Size.Y / 2,0)
 	walktoPart.Anchored = true
 	walktoPart.CanCollide = false
-    walktoPart.Color3 = Color3.fromRGB(0,255,0)
+    walktoPart.Color = Color3.fromRGB(0,255,0)
     walktoPart.Transparency = 0.7
-
 	local Path = findpath(walktoPart)
-	print(Path)
 	if Path.Status == Enum.PathStatus.Success then
-		print("Success")
 		for index, waypoint in pairs(Path:GetWaypoints()) do
 			--[[local part = Instance.new("Part",workspace)
 			part.Size = Vector3.new(1,1,1)
@@ -152,7 +150,8 @@ local function walkto(destination)
             spawnText("Door["..currentroom.."] finished walk. Walking to...[" .. currentroom + 1 .. "].")
             currentroom = currentroom + 1
         elseif destination.Name == "Door" then
-            
+            Humanoid:MoveTo(HumanoidRootPart.Position)
+            Humanoid:MoveTo(destination.Position)
         end
 		walktoPart:Destroy()
 	else
@@ -233,11 +232,13 @@ local function gotodoor()
             room = rooms:WaitForChild(currentroom)
             door = room.Door
             highlight.Parent = door
+            print("oh hi oh")
             for i,v in pairs(room:GetChildren()) do
                 if v.Name == "Rooms_Desk" then
                     v:Destroy()
                 end
             end
+            print(room.Name)
             walkto(room.RoomExit)
         end
     end
@@ -282,19 +283,23 @@ end)
 UIS.InputBegan:Connect(function(input, gameProcessedEvent)
     if not gameProcessedEvent then
         if input.KeyCode == Enum.KeyCode.Y then
-            if comfirmedroom and comfirmingroom then
+            print("a")
+            if not comfirmedroom and comfirmingroom then
+                print("c")
                 spawnText("Success! AI can be triggered once you press Shift + Y. Do not move with your keys during process!",0,true)
                 comfirmedroom = true
                 comfirmingroom = false
                 TextBox.Visible = false
                 TextBox.Text = ""
-            elseif not comfirmedroom then
+            elseif not comfirmedroom and not comfirmingroom then
                 TextBox.TextEditable = false
-                local textEntered = tonumber(TextBox.Text)
-                if not textEntered == "" and rooms:FindFirstChild(textEntered) then
-                    spawnText("Are you sure ["..textEntered.."] is the room you are willing to start? Press Y if yes, N if not.",0,true)
+                local s = TextBox.Text
+                local res = string.match(s , "%d+")
+                if rooms:FindFirstChild(res) then
+                    print("Find room")
+                    spawnText("Are you sure [" .. res .. "] is the room you are willing to start? Press Y if yes, N if not.",0,true)
                     comfirmingroom = true
-                    currentroom = textEntered
+                    currentroom = res
                 end
             end
         elseif input.KeyCode == Enum.KeyCode.N then

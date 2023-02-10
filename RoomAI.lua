@@ -156,7 +156,7 @@ local function walkto(destination)
 		walktoPart:Destroy()
 	else
 		spawnText("Path finding not successful. Please contact me with media.",true)
-		Humanoid:MoveTo(destination.Position - (character.HumanoidRootPart.CFrame.LookVector * 10))
+		walktoPart:Destroy()
 	end
 end
 
@@ -210,11 +210,11 @@ local function unhide()
 
     Part.Anchored = true
     Part.CanCollide = false
-    Part.Transparency = 1
+    Part.Transparency = .5
 
     Part.CFrame = HumanoidRootPart.CFrame + HumanoidRootPart.CFrame.LookVector * 10
     task.wait()
-    game.Players.LocalPlayer.Character:SetPrimaryPartCFrame(Part.CFrame)
+    character:SetPrimaryPartCFrame(Part.CFrame)
     task.wait(1)
     Part:Destroy()
 end

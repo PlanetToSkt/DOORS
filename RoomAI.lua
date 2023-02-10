@@ -151,7 +151,6 @@ local function walkto(destination)
 			Humanoid.MoveToFinished:Wait()
             		part:Destroy()
 		end
-	end
         if destination.Name == "RoomExit" then
             spawnText("Door["..currentroom.."] finished walk. Walking to...[" .. currentroom + 1 .. "].")
             currentroom = currentroom + 1

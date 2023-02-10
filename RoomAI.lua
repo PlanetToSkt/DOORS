@@ -143,15 +143,15 @@ local function walkto(destination)
             if started == false then
                 break
             end
-			--[[local part = Instance.new("Part",workspace)
+			local part = Instance.new("Part",workspace)
 			part.Size = Vector3.new(1,1,1)
 			part.CanCollide = false
 			part.Anchored = true
-            part.Transparency = 1
+            part.Transparency = .7
 			part.Position = waypoint.Position
-            --]]
 			Humanoid:MoveTo(waypoint.Position)
 			Humanoid.MoveToFinished:Wait()
+            part:Destroy()
 		end
         if destination.Name == "RoomExit" then
             spawnText("Door["..currentroom.."] finished walk. Walking to...[" .. currentroom + 1 .. "].")

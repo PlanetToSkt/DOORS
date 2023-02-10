@@ -150,8 +150,7 @@ local function walkto(destination)
             spawnText("Door["..currentroom.."] finished walk. Walking to...[" .. currentroom + 1 .. "].")
             currentroom = currentroom + 1
         elseif destination.Name == "Door" then
-            Humanoid:MoveTo(HumanoidRootPart.Position)
-            Humanoid:MoveTo(destination.Position)
+            spawnText("TESTING TEXT \n Moved to locker.")
         end
 		walktoPart:Destroy()
 	else

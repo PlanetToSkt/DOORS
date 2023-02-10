@@ -275,8 +275,8 @@ end)
 workspace.ChildRemoved:Connect(function(Obj)
     if Obj.Name:sub(1, 1) == "A" and Obj.Name ~= "AmbushMoving" then
         spawnText(Obj.Name .. " Despawned, AI continuing journey...", 0, true)
-        hide = false
         unhide()
+        hide = false
     end
 end)
 

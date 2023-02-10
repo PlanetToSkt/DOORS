@@ -127,7 +127,7 @@ end
 
 local function walkto(destination)
 	local walktoPart = Instance.new("Part",workspace)
-	walktoPart.Size = Vector3.new(5,1,3)
+	walktoPart.Size = Vector3.new(5,2,4)
 	walktoPart.Position = destination.Position - Vector3.new(0,destination.Size.Y / 2,0)
 	walktoPart.Anchored = true
 	walktoPart.CanCollide = false

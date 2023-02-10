@@ -131,6 +131,7 @@ local function walkto(destination)
 	walktoPart.Position = destination.Position - Vector3.new(0,destination.Size.Y / 2,0)
 	walktoPart.Anchored = true
 	walktoPart.CanCollide = false
+    walktoPart.Color = Color3.fromRGB(0,255,0)
     walktoPart.Transparency = 0.7
 	local Path = findpath(walktoPart)
 	if Path.Status == Enum.PathStatus.Success then

@@ -132,25 +132,26 @@ local function walkto(destination)
 	walktoPart.Position = destination.Position - Vector3.new(0,destination.Size.Y / 2,0)
 	walktoPart.Anchored = true
 	walktoPart.CanCollide = false
-    walktoPart.Color = Color3.fromRGB(0,255,0)
-    walktoPart.Transparency = 0.7
-    if destination.Name == "Door" then
-        spawnText("TESTING TEXT \n walking to locker.")
-    end
+    	walktoPart.Color = Color3.fromRGB(0,255,0)
+	walktoPart.Transparency = 0.7
+	if destination.Name == "Door" then
+		spawnText("TESTING TEXT \n walking to locker.")
+	end
 	local Path = findpath(walktoPart)
 	if Path.Status == Enum.PathStatus.Success then
 		for index, waypoint in pairs(Path:GetWaypoints()) do
-            print("A")
+            		print("A")
 			local part = Instance.new("Part",workspace)
 			part.Size = Vector3.new(1,1,1)
 			part.CanCollide = false
 			part.Anchored = true
-            part.Transparency = .7
+            		part.Transparency = .7
 			part.Position = waypoint.Position
 			Humanoid:MoveTo(waypoint.Position)
 			Humanoid.MoveToFinished:Wait()
-            part:Destroy()
+            		part:Destroy()
 		end
+	end
         if destination.Name == "RoomExit" then
             spawnText("Door["..currentroom.."] finished walk. Walking to...[" .. currentroom + 1 .. "].")
             currentroom = currentroom + 1

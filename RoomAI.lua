@@ -121,8 +121,6 @@ local function findpath(destination)
 
 	path:ComputeAsync(character.HumanoidRootPart.Position, destination.Position)
 	
-	print(character.HumanoidRootPart.Position, destination.Position)
-	
 	return path
 end
 
@@ -134,6 +132,7 @@ local function walkto(destination)
 	walktoPart.CanCollide = false
     	walktoPart.Color = Color3.fromRGB(0,255,0)
 	walktoPart.Transparency = 0.7
+    print(destination.Name)
 	if destination.Name == "Door" then
 		spawnText("TESTING TEXT \n walking to locker.")
 	end
@@ -186,9 +185,6 @@ end
 
 local function hidenow()
     local closet = findnearestcloset()
-    if closet then
-        print(closet.Position, true)
-    end
     highlightcloset.Parent = closet.Parent
     Humanoid:MoveTo(HumanoidRootPart.Position)
     local Part = Instance.new("Part",workspace)
@@ -237,13 +233,11 @@ local function gotodoor()
             room = rooms:WaitForChild(currentroom)
             door = room.Door
             highlight.Parent = door
-            print("oh hi oh")
             for i,v in pairs(room:GetChildren()) do
                 if v.Name == "Rooms_Desk" then
                     v:Destroy()
                 end
             end
-            print(room.Name)
             walkto(room.RoomExit)
             walkingtodoor = false
         end
@@ -289,9 +283,7 @@ end)
 UIS.InputBegan:Connect(function(input, gameProcessedEvent)
     if not gameProcessedEvent then
         if input.KeyCode == Enum.KeyCode.Y then
-            print("a")
             if not comfirmedroom and comfirmingroom then
-                print("c")
                 spawnText("Success! AI can be triggered once you press Shift + Y. Do not move with your keys during process!",0,true)
                 comfirmedroom = true
                 comfirmingroom = false
@@ -302,7 +294,6 @@ UIS.InputBegan:Connect(function(input, gameProcessedEvent)
                 local s = TextBox.Text
                 local res = string.match(s , "%d+")
                 if rooms:FindFirstChild(res) then
-                    print("Find room")
                     spawnText("Are you sure [" .. res .. "] is the room you are willing to start? Press Y if yes, N if not.",0,true)
                     comfirmingroom = true
                     currentroom = res

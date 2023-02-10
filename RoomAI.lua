@@ -140,9 +140,6 @@ local function walkto(destination)
 	local Path = findpath(walktoPart)
 	if Path.Status == Enum.PathStatus.Success then
 		for index, waypoint in pairs(Path:GetWaypoints()) do
-            if started == false then
-                break
-            end
 			local part = Instance.new("Part",workspace)
 			part.Size = Vector3.new(1,1,1)
 			part.CanCollide = false
@@ -233,6 +230,7 @@ local function gotodoor()
         return
     else
         if walkingtodoor == false then
+            walkingtodoor = true
             local room
             local door
             room = rooms:WaitForChild(currentroom)
@@ -246,6 +244,7 @@ local function gotodoor()
             end
             print(room.Name)
             walkto(room.RoomExit)
+            walkingtodoor = false
         end
     end
 end

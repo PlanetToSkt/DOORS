@@ -134,6 +134,9 @@ local function walkto(destination)
 	walktoPart.CanCollide = false
     walktoPart.Color = Color3.fromRGB(0,255,0)
     walktoPart.Transparency = 0.7
+    if destination.Name == "Door" then
+        spawnText("TESTING TEXT \n walking to locker.")
+    end
 	local Path = findpath(walktoPart)
 	if Path.Status == Enum.PathStatus.Success then
 		for index, waypoint in pairs(Path:GetWaypoints()) do

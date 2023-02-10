@@ -223,9 +223,7 @@ local highlight = Instance.new("Highlight")
 highlight.OutlineColor = Color3.fromRGB(0,255,0) 
 highlight.FillTransparency = 1
 local function gotodoor()
-    if hide == true then
-        return
-    else
+    if not hide then
         if walkingtodoor == false then
             walkingtodoor = true
             local room

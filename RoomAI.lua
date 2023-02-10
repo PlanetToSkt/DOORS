@@ -140,6 +140,7 @@ local function walkto(destination)
 	local Path = findpath(walktoPart)
 	if Path.Status == Enum.PathStatus.Success then
 		for index, waypoint in pairs(Path:GetWaypoints()) do
+            print("A")
 			local part = Instance.new("Part",workspace)
 			part.Size = Vector3.new(1,1,1)
 			part.CanCollide = false

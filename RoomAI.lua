@@ -23,6 +23,7 @@ local hide = false
 local currentroom = 0
 local comfirmedroom = false
 local comfirmingroom = false
+local stop = false
 
 mainGui.IgnoreGuiInset = true
 
@@ -136,6 +137,7 @@ local function walkto(destination)
 	local Path = findpath(walktoPart)
 	if Path.Status == Enum.PathStatus.Success then
 		for index, waypoint in pairs(Path:GetWaypoints()) do
+            if started == false then break end
 			--[[local part = Instance.new("Part",workspace)
 			part.Size = Vector3.new(1,1,1)
 			part.CanCollide = false
@@ -312,7 +314,7 @@ UIS.InputBegan:Connect(function(input, gameProcessedEvent)
             end
         end
         if UIS:IsKeyDown(Enum.KeyCode.Y) and UIS:IsKeyDown(Enum.KeyCode.LeftShift) and comfirmedroom then
-            if not processing then
+            if not processing and not stop then
                 spawnText("AI passing begin. Please wait while configuring.")
                 processing = true
                 started = true
@@ -328,9 +330,13 @@ UIS.InputBegan:Connect(function(input, gameProcessedEvent)
                 spawnText("A90 removed from game.", 0, true)
                 task.wait(1)
                 loopingprocess()
-            else
+            elseif processing and not stop then
                 spawnText("AI passing paused.")
                 processing = false
+                started = false
+            end
+            if UIS:IsKeyDown(Enum.KeyCode.Q) and UIS:IsKeyDown(Enum.KeyCode.LeftShift) and comfirmedroom then
+                stop = true
                 started = false
             end
         end
